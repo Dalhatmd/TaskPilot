@@ -14,7 +14,7 @@ languages:
 frameworks:
   backend: FastAPI
   frontend: React + Tailwind CSS
-  database: PostgreSQL (SQLite for dev/testing)
+  database: supabase (SQLite for dev/testing)
   testing: pytest (backend), Jest/React Testing Library (frontend)
 
 tools:
@@ -49,6 +49,10 @@ ai_usage:
   context_aware:
     - Use file trees and API specs for accurate scaffolding.
     - Leverage git diffs for commit messages and changelogs.
+  commit message generation:
+    - Keep commit messages concise and descriptive.
+    - use the present tense.
+    - use an active voice.
 
 # 🪪 Code Quality
 style_guidelines:
