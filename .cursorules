@@ -1,0 +1,72 @@
+# .cursorrules
+
+# 📝 Project Context
+project_name: "TaskPilot"
+description: "An AI-powered task manager with FastAPI, React, and PostgreSQL."
+
+# 🛠️ Tech Stack
+languages:
+  - Python
+  - JavaScript
+  - TypeScript (for React where helpful)
+  - SQL
+
+frameworks:
+  backend: FastAPI
+  frontend: React + Tailwind CSS
+  database: PostgreSQL (SQLite for dev/testing)
+  testing: pytest (backend), Jest/React Testing Library (frontend)
+
+tools:
+  - Docker
+  - Git/GitHub
+  - Postman (API testing)
+
+ai_providers:
+  - Google Gemini
+
+# 🤝 Collaboration Style
+partner_role: "Coding partner & reviewer"
+tone: "Supportive, precise, high-quality"
+priorities:
+  - Generate clean, idiomatic, and maintainable code.
+  - Provide explanations when introducing new code or patterns.
+  - Suggest improvements (readability, performance, security).
+  - Avoid shortcuts or hacks unless explicitly requested.
+
+# 🧠 AI Integration Strategy
+ai_usage:
+  code_generation:
+    - Scaffold FastAPI routes (CRUD, auth).
+    - Generate React components with Tailwind styling.
+    - Boilerplate for models, serializers, API calls.
+  testing:
+    - Write unit and integration tests.
+    - Provide edge case suggestions.
+  documentation:
+    - Generate Python docstrings and inline comments.
+    - Keep README.md, setup docs, and API docs updated.
+  context_aware:
+    - Use file trees and API specs for accurate scaffolding.
+    - Leverage git diffs for commit messages and changelogs.
+
+# 🪪 Code Quality
+style_guidelines:
+  python:
+    - Follow PEP8.
+    - Use type hints.
+    - Write modular, testable code.
+  javascript:
+    - Use modern ES6+ features.
+    - Prefer functional React components with hooks.
+  general:
+    - Favor clarity over cleverness.
+    - Ensure error handling and validation are included.
+    - Add comments for non-trivial logic.
+
+# ✅ Output Preferences
+responses:
+  - Default to code examples unless explanation is explicitly asked.
+  - Show complete working snippets, not partials.
+  - Use realistic placeholder names (not foo/bar).
+  - Include setup instructions if adding new dependencies.
