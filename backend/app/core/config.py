@@ -4,7 +4,10 @@ Handles environment variables and application settings.
 """
 
 from typing import List, Optional, Union
-from pydantic import AnyHttpUrl, BaseSettings, validator
+from pydantic import AnyHttpUrl, validator
+from pydantic_settings import BaseSettings
+import os
+from typing import Any
 
 
 class Settings(BaseSettings):
@@ -16,14 +19,14 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     
     # Security
-    SECRET_KEY: str = "your-secret-key-change-in-production"
+    SECRET_KEY: str = os.getenv("SECRET_KEY")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     # Database Configuration
     # Supabase PostgreSQL connection
-    SUPABASE_URL: Optional[str] = None
-    SUPABASE_KEY: Optional[str] = None
-    SUPABASE_DB_PASSWORD: Optional[str] = None
+    SUPABASE_URL: Optional[str] = os.getenv("SUPABASE_URL")
+    SUPABASE_KEY: Optional[str] = os.getenv("SUPABASE_KEY")
+    SUPABASE_DB_PASSWORD: Optional[str] = os.getenv("SUPABASE_DB_PASSWORD")
     
     # Database URL - defaults to SQLite for development
     DATABASE_URL: str = "sqlite:///./taskpilot.db"
