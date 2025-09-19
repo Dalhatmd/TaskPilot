@@ -18,10 +18,10 @@ class User(Base):
     # Primary key
     id = Column(Integer, primary_key=True, index=True)
     
-    # Authentication fields
+    # Authentication fields (Supabase handles auth, we store user data)
     email = Column(String, unique=True, index=True, nullable=False)
     username = Column(String, unique=True, index=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
+    supabase_user_id = Column(String, unique=True, index=True, nullable=False)  # Supabase auth user ID
     
     # Profile fields
     full_name = Column(String, nullable=True)
