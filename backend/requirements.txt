@@ -1,7 +1,7 @@
 # FastAPI and core dependencies
 fastapi==0.109.1
 uvicorn[standard]==0.24.0
-pydantic==2.5.0
+pydantic[email]==2.5.0
 pydantic-settings==2.1.0
 
 # Database
@@ -13,6 +13,7 @@ psycopg2-binary==2.9.9  # For PostgreSQL/Supabase
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.6
+supabase==2.8.0
 
 # AI Integration
 google-generativeai==0.3.2
