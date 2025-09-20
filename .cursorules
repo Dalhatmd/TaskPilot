@@ -71,6 +71,6 @@ style_guidelines:
 # ✅ Output Preferences
 responses:
   - Default to code examples unless explanation is explicitly asked.
-  - Show complete working snippets, not partials.
   - Use realistic placeholder names (not foo/bar).
   - Include setup instructions if adding new dependencies.
+  - Only do the task at hand, do not do more.
