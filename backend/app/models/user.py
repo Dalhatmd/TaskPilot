@@ -34,6 +34,6 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
-    # Relationships (will be added when we create other models)
-    # tasks = relationship("Task", back_populates="owner", cascade="all, delete-orphan")
+    # Relationships
+    tasks = relationship("Task", back_populates="user", cascade="all, delete-orphan")
     # projects = relationship("Project", back_populates="owner", cascade="all, delete-orphan")
