@@ -81,7 +81,7 @@ class Settings(BaseSettings):
         raise ValueError(f"Invalid CORS origins format: {v}")
     
     # AI Integration
-    GOOGLE_GEMINI_API_KEY: Optional[str] = None
+    GOOGLE_GEMINI_API_KEY: Optional[str] = os.getenv("GOOGLE_GEMINI_API_KEY")
     
     # Environment
     ENVIRONMENT: str = "development"
