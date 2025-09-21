@@ -4,7 +4,8 @@ Defines Pydantic models for signup, login, and user responses.
 """
 
 from typing import Optional
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_serializer
+from datetime import datetime
 
 
 class UserSignup(BaseModel):
@@ -32,7 +33,11 @@ class UserResponse(BaseModel):
     full_name: Optional[str] = None
     is_active: bool
     is_superuser: bool
-    created_at: str
+    created_at: Optional[datetime] = None
+    
+    @field_serializer('created_at')
+    def serialize_created_at(self, value: Optional[datetime]) -> Optional[str]:
+        return value.isoformat() if value else None
     
     class Config:
         from_attributes = True

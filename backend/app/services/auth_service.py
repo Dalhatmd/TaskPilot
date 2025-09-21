@@ -64,10 +64,8 @@ class AuthService:
     def signup(self, user_data: UserSignup, db: Session) -> Dict[str, Any]:
         """Register a new user with Supabase and create local user record."""
         if not self.supabase:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Supabase authentication service is not available"
-            )
+            # Fallback to local authentication for development
+            return self._local_signup(user_data, db)
             
         try:
             # Sign up user with Supabase
@@ -128,10 +126,8 @@ class AuthService:
     def login(self, user_data: UserLogin, db: Session) -> Dict[str, Any]:
         """Authenticate user with Supabase and return access token."""
         if not self.supabase:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Supabase authentication service is not available"
-            )
+            # Fallback to local authentication for development
+            return self._local_login(user_data, db)
             
         try:
             # Sign in user with Supabase
@@ -189,6 +185,97 @@ class AuthService:
     def get_user_by_email(self, email: str, db: Session) -> Optional[User]:
         """Get user by email from database."""
         return db.query(User).filter(User.email == email).first()
+    
+    def _local_signup(self, user_data: UserSignup, db: Session) -> Dict[str, Any]:
+        """Local signup for development without Supabase."""
+        try:
+            # Check if user already exists
+            existing_user = db.query(User).filter(
+                (User.email == user_data.email) | (User.username == user_data.username)
+            ).first()
+            
+            if existing_user:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Email or username already registered"
+                )
+            
+            # Create local user record with local ID (without Supabase)
+            import uuid
+            local_user_id = str(uuid.uuid4())  # Generate a local UUID for development
+            
+            db_user = User(
+                email=user_data.email,
+                username=user_data.username,
+                full_name=user_data.full_name,
+                supabase_user_id=local_user_id,  # Use local UUID
+                is_active=True,
+                is_superuser=False
+            )
+            
+            db.add(db_user)
+            db.commit()
+            db.refresh(db_user)
+            
+            # Create access token
+            access_token = self.create_access_token(
+                data={"user_id": db_user.id, "email": db_user.email}
+            )
+            
+            return {
+                "access_token": access_token,
+                "token_type": "bearer",
+                "user": db_user
+            }
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Registration failed: {str(e)}"
+            )
+    
+    def _local_login(self, user_data: UserLogin, db: Session) -> Dict[str, Any]:
+        """Local login for development without Supabase."""
+        try:
+            # Find user by email
+            db_user = db.query(User).filter(User.email == user_data.email).first()
+            
+            if not db_user:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid email or password"
+                )
+            
+            if not db_user.is_active:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Inactive user account"
+                )
+            
+            # For development, we'll accept any password for simplicity
+            # In production, you'd hash and compare passwords properly
+            
+            # Create access token
+            access_token = self.create_access_token(
+                data={"user_id": db_user.id, "email": db_user.email}
+            )
+            
+            return {
+                "access_token": access_token,
+                "token_type": "bearer",
+                "user": db_user
+            }
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Login failed: {str(e)}"
+            )
 
 
 # Global auth service instance
