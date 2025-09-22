@@ -25,17 +25,20 @@ def test_api_endpoint_manually():
         {
             "title": "Complete project proposal",
             "description": "Write and submit the quarterly project proposal by Friday",
-            "due_date": "2025-09-25"
+            "due_date": "2025-09-25",
+            "status": "TODO"
         },
         {
             "title": "Review code changes",
             "description": "Review pull requests and provide feedback to team members",
-            "due_date": None
+            "due_date": None,
+            "status": "IN_PROGRESS"
         },
         {
             "title": "Prepare client presentation",
             "description": "Create slides for Monday client meeting about new features",
-            "due_date": "2025-09-28"
+            "due_date": "2025-09-28",
+            "status": "TODO"
         }
     ]
     
@@ -115,7 +118,8 @@ def test_api_endpoint_edge_cases():
         single_task = [{
             "title": "Single task test",
             "description": "Testing with just one task",
-            "due_date": "2025-09-25"
+            "due_date": "2025-09-25",
+            "status": "TODO"
         }]
         response = requests.post(base_url, json=single_task)
         if response.status_code == 200:
@@ -125,6 +129,44 @@ def test_api_endpoint_edge_cases():
             print(f"✗ Single task failed: {response.status_code}")
     except Exception as e:
         print(f"✗ Single task test failed: {e}")
+
+    # Test 4: Mixed task statuses
+    print("\n4. Testing mixed task statuses...")
+    try:
+        mixed_status_tasks = [
+            {
+                "title": "Completed task",
+                "description": "This task is already done",
+                "due_date": "2025-09-20",
+                "status": "COMPLETED"
+            },
+            {
+                "title": "In progress task", 
+                "description": "Currently working on this",
+                "due_date": "2025-09-25",
+                "status": "IN_PROGRESS"
+            },
+            {
+                "title": "Todo task",
+                "description": "Not started yet",
+                "due_date": "2025-09-30",
+                "status": "TODO"
+            },
+            {
+                "title": "Cancelled task",
+                "description": "This was cancelled",
+                "due_date": None,
+                "status": "CANCELLED"
+            }
+        ]
+        response = requests.post(base_url, json=mixed_status_tasks)
+        if response.status_code == 200:
+            result = response.json()
+            print(f"✓ Mixed status result: {result.get('summary', result.get('error'))[:100]}...")
+        else:
+            print(f"✗ Mixed status failed: {response.status_code}")
+    except Exception as e:
+        print(f"✗ Mixed status test failed: {e}")
 
 
 def main():

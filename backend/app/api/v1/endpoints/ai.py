@@ -8,6 +8,7 @@ class TaskInput(BaseModel):
     title: str
     description: str
     due_date: str | None = None
+    status: str | None = "TODO"
 
 @router.post("/summarize-tasks")
 def summarize_tasks_endpoint(tasks: list[TaskInput]):

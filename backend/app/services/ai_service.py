@@ -17,7 +17,8 @@ def summarize_tasks(tasks: list[dict]) -> str:
         str: Summary of the tasks.
     """
     task_descriptions = "\n".join([
-        f"{task['id']}. {task['title']}: {task['description']}" + 
+        f"{task['id']}. {task['title']}: {task['description']} " + 
+        f"[Status: {task.get('status', 'TODO')}]" +
         (f" (Due: {task['due_date']})" if task.get('due_date') else " (No due date)")
         for task in tasks
     ])

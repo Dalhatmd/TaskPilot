@@ -30,12 +30,14 @@ class TestAIEndpoints:
             {
                 "title": "Complete project proposal",
                 "description": "Write and submit the quarterly project proposal by Friday",
-                "due_date": "2025-09-25"
+                "due_date": "2025-09-25",
+                "status": "TODO"
             },
             {
                 "title": "Review code changes",
                 "description": "Review pull requests and provide feedback to team members",
-                "due_date": None
+                "due_date": None,
+                "status": "IN_PROGRESS"
             }
         ]
 
@@ -82,7 +84,8 @@ class TestAIEndpoints:
             {
                 "title": "Fix critical bug",
                 "description": "Resolve the authentication issue in production ASAP",
-                "due_date": "2025-09-22"
+                "due_date": "2025-09-22",
+                "status": "TODO"
             }
         ]
 
@@ -102,7 +105,8 @@ class TestAIEndpoints:
             {
                 "title": "Test task",
                 "description": "Test description",
-                "due_date": None
+                "due_date": None,
+                "status": "TODO"
             }
         ]
 
@@ -171,12 +175,14 @@ class TestAIEndpoints:
             {
                 "title": "Update API & documentation",
                 "description": "Fix API endpoints (v2.0) & update docs with new schema",
-                "due_date": "2025-09-30"
+                "due_date": "2025-09-30",
+                "status": "IN_PROGRESS"
             },
             {
                 "title": "Test: E2E scenarios",
                 "description": "Run end-to-end tests for user registration/login flow",
-                "due_date": None
+                "due_date": None,
+                "status": "TODO"
             }
         ]
 
@@ -200,11 +206,13 @@ class TestAIEndpoints:
         
         # Create 10 tasks
         task_data = []
+        statuses = ["TODO", "IN_PROGRESS", "TODO", "IN_PROGRESS", "TODO"]
         for i in range(10):
             task_data.append({
                 "title": f"Task {i+1}",
                 "description": f"Description for task {i+1}",
-                "due_date": f"2025-09-{20+i}"
+                "due_date": f"2025-09-{20+i}",
+                "status": statuses[i % len(statuses)]
             })
 
         with patch('app.api.v1.endpoints.ai.summarize_tasks') as mock_summarize:
@@ -221,6 +229,46 @@ class TestAIEndpoints:
             assert len(call_args) == 10
             assert call_args[0]["title"] == "Task 1"
             assert call_args[9]["title"] == "Task 10"
+
+    def test_summarize_tasks_endpoint_with_status(self):
+        """Test endpoint with different task statuses."""
+        
+        task_data = [
+            {
+                "title": "Completed task",
+                "description": "This task is already done",
+                "due_date": "2025-09-20",
+                "status": "COMPLETED"
+            },
+            {
+                "title": "In progress task", 
+                "description": "This task is being worked on",
+                "due_date": "2025-09-25",
+                "status": "IN_PROGRESS"
+            },
+            {
+                "title": "Todo task",
+                "description": "This task hasn't been started",
+                "due_date": "2025-09-30",
+                "status": "TODO"
+            }
+        ]
+
+        with patch('app.api.v1.endpoints.ai.summarize_tasks') as mock_summarize:
+            mock_summarize.return_value = "You have 1 completed task, 1 in progress, and 1 pending task."
+            
+            response = client.post("/api/v1/ai/summarize-tasks", json=task_data)
+            
+            assert response.status_code == 200
+            response_data = response.json()
+            assert "summary" in response_data
+            
+            # Verify status information was passed correctly
+            call_args = mock_summarize.call_args[0][0]
+            assert len(call_args) == 3
+            assert call_args[0]["status"] == "COMPLETED"
+            assert call_args[1]["status"] == "IN_PROGRESS"
+            assert call_args[2]["status"] == "TODO"
 
 
 def main():
