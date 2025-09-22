@@ -27,3 +27,4 @@ def summarize_tasks(tasks: list[dict]) -> str:
     model = genai.GenerativeModel(MODEL_NAME)
     response = model.generate_content(prompt)
     return response.text
+
