@@ -18,17 +18,20 @@ class TestAIService:
             {
                 "id": 1,
                 "title": "Complete project proposal",
-                "description": "Write and submit the quarterly project proposal by Friday"
+                "description": "Write and submit the quarterly project proposal by Friday",
+                "due_date": "2025-09-25"
             },
             {
                 "id": 2,
                 "title": "Review code changes",
-                "description": "Review pull requests and provide feedback to team members"
+                "description": "Review pull requests and provide feedback to team members",
+                "due_date": None
             },
             {
                 "id": 3,
                 "title": "Prepare presentation",
-                "description": "Create slides for client meeting next Monday"
+                "description": "Create slides for client meeting next Monday",
+                "due_date": "2025-09-29"
             }
         ]
 
@@ -90,7 +93,8 @@ class TestAIService:
             {
                 "id": 1,
                 "title": "Fix critical bug",
-                "description": "Resolve the authentication issue in production ASAP"
+                "description": "Resolve the authentication issue in production ASAP",
+                "due_date": "2025-09-22"
             }
         ]
 
@@ -120,8 +124,8 @@ class TestAIService:
     def test_summarize_tasks_prompt_structure(self):
         """Test that the prompt is structured correctly."""
         tasks = [
-            {"id": 1, "title": "Task 1", "description": "Description 1"},
-            {"id": 2, "title": "Task 2", "description": "Description 2"}
+            {"id": 1, "title": "Task 1", "description": "Description 1", "due_date": "2025-09-20"},
+            {"id": 2, "title": "Task 2", "description": "Description 2", "due_date": None}
         ]
 
         mock_response = MagicMock()
@@ -152,7 +156,7 @@ class TestAIService:
     @patch('app.services.ai_service.genai.GenerativeModel')
     def test_summarize_tasks_api_error_handling(self, mock_genai_class):
         """Test error handling when AI API fails."""
-        tasks = [{"id": 1, "title": "Test Task", "description": "Test Description"}]
+        tasks = [{"id": 1, "title": "Test Task", "description": "Test Description", "due_date": None}]
         
         # Simulate API error
         mock_model = MagicMock()
